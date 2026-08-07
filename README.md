@@ -54,7 +54,7 @@ The workflow performs the following tasks:
 
 # 📂 Project Structure
 
-```
+```text
 purchase-approval-automation/
 │
 ├── README.md
@@ -63,12 +63,13 @@ purchase-approval-automation/
 └── screenshots/
     ├── workflow.png
     ├── approval-email.png
+    ├── finance-approval.png
     ├── purchase-order-pdf.png
     ├── drive-folder.png
-    └── approval-sheet.png
-```
+    ├── approval-sheet.png
+    └── vendor-email.png
 
----
+```
 
 # 📸 Workflow Screenshots
 
@@ -84,21 +85,33 @@ purchase-approval-automation/
 
 ---
 
-## 3. Purchase Order PDF
+## 3. Finance Approval
+
+![Finance Approval](screenshots/finance-approval.png)
+
+---
+
+## 4. Purchase Order PDF
 
 ![Purchase Order PDF](screenshots/purchase-order-pdf.png)
 
 ---
 
-## 4. Google Drive Storage
+## 5. Google Drive Folder
 
-![Drive Folder](screenshots/drive-folder.png)
+![Google Drive Folder](screenshots/drive-folder.png)
 
 ---
 
-## 5. Approval Records
+## 6. Approval Sheet
 
 ![Approval Sheet](screenshots/approval-sheet.png)
+
+---
+
+## 7. Vendor Email
+
+![Vendor Email](screenshots/vendor-email.png)
 
 ---
 
@@ -108,8 +121,8 @@ purchase-approval-automation/
 2. Import **workflow.json** into n8n.
 3. Configure Google credentials.
 4. Configure OpenAI credentials.
-5. Configure PDF Generator.
-6. Run the workflow.
+5. Configure the PDF Generator.
+6. Execute the workflow.
 
 ---
 
@@ -118,3 +131,6 @@ purchase-approval-automation/
 This project is licensed under the MIT License.
 
 ⭐ If you found this project useful, consider giving it a star!
+
+---
+
