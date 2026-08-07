@@ -1,0 +1,1727 @@
+{
+  "name": "Purchase Approval system",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "18b89cb1-674b-4b7d-8333-fc66091b5bff",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "9dcc9f5e-fdef-4bfd-b67a-78697b5ce7cc",
+      "name": "Webhook",
+      "webhookId": "18b89cb1-674b-4b7d-8333-fc66091b5bff"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "59feee2e-ac8e-4982-961e-41895f74a9b0",
+              "leftValue": "={{ $json.data.approved }}",
+              "rightValue": false,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1120,
+        -64
+      ],
+      "id": "b5e85e66-6736-418c-b1a9-500b44a790cc",
+      "name": "approval status"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "c0d7c534-5909-466b-8af6-8fc5ce2977a0",
+              "leftValue": "={{ $json.body.data.fields[1].value }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "02d20bb1-f410-4220-bda6-5e4e0b1e69cb",
+              "leftValue": "={{ $json.body.data.fields[3].value }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "7e127d47-157f-4f2d-914f-3ed207788e7c",
+              "leftValue": "={{ $json.body.data.fields[5].value }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        224,
+        0
+      ],
+      "id": "3fb01c13-b7f8-4b0c-b27f-3456f14add3a",
+      "name": "validate data"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Webhook').item.json.body.data.fields[1].value }}",
+        "subject": "Request Incomplete",
+        "emailType": "text",
+        "message": "The required feilds were empty not valid try again to fill form with valid data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        448,
+        96
+      ],
+      "id": "ee43b902-aa15-4506-9db7-1573bc40488f",
+      "name": "incomplete request",
+      "webhookId": "e1b8166c-e1b8-485f-8820-5c92bff52659",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "7fKllvlXd4YeeeoO",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "412dda22-c019-406c-b08d-a2c7e035a326",
+              "name": "request id",
+              "value": "={{ $json.body.data.responseId }}",
+              "type": "string"
+            },
+            {
+              "id": "ec9db424-4442-4bb7-bffe-a4682e0dd12e",
+              "name": "employee name ",
+              "value": "={{ $json.body.data.fields[0].value }}",
+              "type": "string"
+            },
+            {
+              "id": "5488a56d-f4bd-4261-9554-15fb69d1202a",
+              "name": "employee email",
+              "value": "={{ $json.body.data.fields[1].value }}",
+              "type": "string"
+            },
+            {
+              "id": "8e477812-dd5a-4c65-b7b9-f6de26721ec7",
+              "name": "department",
+              "value": "={{ $json.body.data.fields[2].value }}",
+              "type": "string"
+            },
+            {
+              "id": "2c890ed2-653f-497a-a8c6-137df13ce465",
+              "name": "item",
+              "value": "={{ $json.body.data.fields[3].value }}",
+              "type": "string"
+            },
+            {
+              "id": "88d818b8-8750-44a5-8ff3-5b51c07dc425",
+              "name": "quantity",
+              "value": "={{ $json.body.data.fields[4].value }}",
+              "type": "number"
+            },
+            {
+              "id": "e946b987-bb62-4c28-9307-74e087a97af7",
+              "name": "ammount",
+              "value": "={{ $json.body.data.fields[5].value }}",
+              "type": "number"
+            },
+            {
+              "id": "f32b73e2-2049-4eb7-ba60-d7f485246e32",
+              "name": "reason",
+              "value": "={{ $json.body.data.fields[6].value }}",
+              "type": "string"
+            },
+            {
+              "id": "58d1ade5-7ef8-4b82-9ab2-0794bd6111b4",
+              "name": "status ",
+              "value": "Pending Manager Approval",
+              "type": "string"
+            },
+            {
+              "id": "3984a7c5-10c9-4bbb-931c-3ba34f56d5ac",
+              "name": "date",
+              "value": "={{ $json.body.data.createdAt.toDateTime().format('yyyy-MM-dd') }}",
+              "type": "string"
+            },
+            {
+              "id": "46de58cb-93df-4fbe-a842-b0951080f185",
+              "name": "poNumber",
+              "value": "=PO-{{$now.format(\"yyyyMMddHHmmss\")}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        448,
+        -64
+      ],
+      "id": "7881a478-3fbb-4f79-b22c-cdd05c758d0f",
+      "name": "clean field name"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1dn0tkgnc-UeuU7wHyIHkwNNwpqH2NzL7aCtypj6_qEQ",
+          "mode": "list",
+          "cachedResultName": " purchase approval",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dn0tkgnc-UeuU7wHyIHkwNNwpqH2NzL7aCtypj6_qEQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dn0tkgnc-UeuU7wHyIHkwNNwpqH2NzL7aCtypj6_qEQ/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "date": "={{ $json.date }}",
+            "respond id ": "={{ $json['request id'] }}",
+            "employee name": "={{ $json['employee name '] }}",
+            "employee email": "={{ $json['employee email'] }}",
+            "department": "={{ $json.department }}",
+            "item": "={{ $json.item }}",
+            "quantity": "={{ $json.quantity }}",
+            "ammount": "={{ $json.ammount }}",
+            "reason": "={{ $json.reason }}",
+            "status": "={{ $json['status '] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "respond id ",
+              "displayName": "respond id ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "employee name",
+              "displayName": "employee name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "employee email",
+              "displayName": "employee email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "department",
+              "displayName": "department",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "item",
+              "displayName": "item",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "quantity",
+              "displayName": "quantity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ammount",
+              "displayName": "ammount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "reason",
+              "displayName": "reason",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        672,
+        -64
+      ],
+      "id": "ec9900af-f02d-4e80-bdfd-ffba7d1a6845",
+      "name": "data in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "o10OGF3i2mV3urzQ",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "sendTo": "purposework686@gmail.com",
+        "subject": "Purchase Request Approval Needed",
+        "message": "=Employee: {{ $json['employee name'] }}\n\nDepartment:\n{{$json.department}}\n\nItem:\n{{$json.item}}\n\nAmount:\n${{ $json.ammount }}\n\nReason:\n{{$json.reason}}\n\n",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double"
+          }
+        },
+        "options": {
+          "limitWaitTime": {
+            "values": {
+              "resumeAmount": 2,
+              "resumeUnit": "days"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        896,
+        -64
+      ],
+      "id": "6f1a0cf4-ec45-44dc-900b-c34bd9219606",
+      "name": "manager  response",
+      "webhookId": "0fe5dd21-dd40-4747-9863-da33ee9e174a",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "7fKllvlXd4YeeeoO",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1dn0tkgnc-UeuU7wHyIHkwNNwpqH2NzL7aCtypj6_qEQ",
+          "mode": "list",
+          "cachedResultName": " purchase approval",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dn0tkgnc-UeuU7wHyIHkwNNwpqH2NzL7aCtypj6_qEQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dn0tkgnc-UeuU7wHyIHkwNNwpqH2NzL7aCtypj6_qEQ/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "Approved by Manager",
+            "respond id ": "={{ $('clean field name').item.json['request id'] }}"
+          },
+          "matchingColumns": [
+            "respond id "
+          ],
+          "schema": [
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "respond id ",
+              "displayName": "respond id ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "employee name",
+              "displayName": "employee name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "employee email",
+              "displayName": "employee email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "department",
+              "displayName": "department",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "item",
+              "displayName": "item",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "quantity",
+              "displayName": "quantity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "ammount",
+              "displayName": "ammount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "reason",
+              "displayName": "reason",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1328,
+        -144
+      ],
+      "id": "1f7936eb-c81a-4701-8e1f-f8e3de5eb381",
+      "name": "Update status",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "o10OGF3i2mV3urzQ",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1dn0tkgnc-UeuU7wHyIHkwNNwpqH2NzL7aCtypj6_qEQ",
+          "mode": "list",
+          "cachedResultName": " purchase approval",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dn0tkgnc-UeuU7wHyIHkwNNwpqH2NzL7aCtypj6_qEQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dn0tkgnc-UeuU7wHyIHkwNNwpqH2NzL7aCtypj6_qEQ/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "respond id ": "={{ $('clean field name').item.json['request id'] }}",
+            "status": "Rejected by Manager"
+          },
+          "matchingColumns": [
+            "respond id "
+          ],
+          "schema": [
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "respond id ",
+              "displayName": "respond id ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "employee name",
+              "displayName": "employee name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "employee email",
+              "displayName": "employee email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "department",
+              "displayName": "department",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "item",
+              "displayName": "item",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "quantity",
+              "displayName": "quantity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "ammount",
+              "displayName": "ammount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "reason",
+              "displayName": "reason",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1328,
+        32
+      ],
+      "id": "d521001d-b4d6-4fd5-a7a5-b8adbe2a8dc1",
+      "name": "Update status1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "o10OGF3i2mV3urzQ",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('clean field name').item.json['employee email'] }}",
+        "subject": "approval rejected",
+        "emailType": "text",
+        "message": "=Unfortunately {{ $('clean field name').item.json['employee name '] }} your purchase request has been rejected. ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1488,
+        32
+      ],
+      "id": "991a0e66-f05a-4b15-9070-ca7b503d8e44",
+      "name": "rejected email",
+      "webhookId": "a60237c1-4416-485d-b892-354ff77b0040",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "7fKllvlXd4YeeeoO",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "2da7bf32-97ba-49d1-82b1-7d5cb10a6faa",
+              "leftValue": "={{ $('clean field name').item.json.ammount }}",
+              "rightValue": 1000,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1536,
+        -144
+      ],
+      "id": "f026901c-9f8d-4313-89a9-790f309e4813",
+      "name": "amount check"
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "sendTo": "purposework686@gmail.com",
+        "subject": "Finance Approval Required",
+        "message": "=Purchase Request\n\nEmployee:\n{{ $('clean field name').item.json['employee name '] }}\n\nItem:\n{{ $('clean field name').item.json.item }}\nAmount:\n${{ $('clean field name').item.json.ammount }}\nReason:\n{{ $('clean field name').item.json.reason }}",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double"
+          }
+        },
+        "options": {
+          "limitWaitTime": {
+            "values": {
+              "resumeAmount": 2,
+              "resumeUnit": "days"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1792,
+        -320
+      ],
+      "id": "d328777e-190c-4852-b244-917a209d595e",
+      "name": "Send message and wait for response",
+      "webhookId": "73e9312f-6266-44aa-af58-c415c73d3ab1",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "7fKllvlXd4YeeeoO",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1ef38d6d-5666-4239-8b25-dddae6ec956c",
+              "leftValue": "={{ $json.data.approved }}",
+              "rightValue": false,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1984,
+        -320
+      ],
+      "id": "48755722-de34-48fb-b08a-46cab118f6f7",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1dn0tkgnc-UeuU7wHyIHkwNNwpqH2NzL7aCtypj6_qEQ",
+          "mode": "list",
+          "cachedResultName": " purchase approval",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dn0tkgnc-UeuU7wHyIHkwNNwpqH2NzL7aCtypj6_qEQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dn0tkgnc-UeuU7wHyIHkwNNwpqH2NzL7aCtypj6_qEQ/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "respond id ": "={{ $('clean field name').item.json['request id'] }}",
+            "status": "Rejected by Finance department"
+          },
+          "matchingColumns": [
+            "respond id "
+          ],
+          "schema": [
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "respond id ",
+              "displayName": "respond id ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "employee name",
+              "displayName": "employee name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "employee email",
+              "displayName": "employee email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "department",
+              "displayName": "department",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "item",
+              "displayName": "item",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "quantity",
+              "displayName": "quantity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "ammount",
+              "displayName": "ammount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "reason",
+              "displayName": "reason",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2192,
+        -224
+      ],
+      "id": "fb280698-0b4b-4c77-91a0-e5a61d19febc",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "o10OGF3i2mV3urzQ",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('clean field name').item.json['employee email'] }}",
+        "subject": "Approval rejected ",
+        "emailType": "text",
+        "message": "={{ $('clean field name').item.json['employee name '] }} Finance department rejected you approval of {{ $('clean field name').item.json.item }} of ammount {{ $('clean field name').item.json.ammount }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        2384,
+        -224
+      ],
+      "id": "c8165b45-bf65-43ac-a475-c8e1c6c82818",
+      "name": "Send a message",
+      "webhookId": "90472225-9474-4576-9879-e4f70b37b344",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "7fKllvlXd4YeeeoO",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const html = `\n<html>\n<head>\n<style>\nbody{\nfont-family:Arial;\npadding:40px;\n}\n\ntable{\nborder-collapse:collapse;\nwidth:100%;\n}\n\ntd,th{\nborder:1px solid #000;\npadding:8px;\n}\n\nh1{\ntext-align:center;\n}\n</style>\n</head>\n\n<body>\n\n<h1>Purchase Order</h1>\n\n<table>\n\n<tr>\n<th>PO Number</th>\n<td>${$('clean field name').first().json.poNumber}</td>\n</tr>\n\n<tr>\n<th>Employee</th>\n<td>${$('clean field name').first().json['employee name ']}</td>\n</tr>\n\n<tr>\n<th>Department</th>\n<td>${$('clean field name').first().json['department']}</td>\n</tr>\n\n<tr>\n<th>Item</th>\n<td>${$('clean field name').first().json['item']}</td>\n</tr>\n\n<tr>\n<th>Quantity</th>\n<td>${$('clean field name').first().json['quantity']}</td>\n</tr>\n\n<tr>\n<th>Amount</th>\n<td>${$('clean field name').first().json['ammount']}</td>\n</tr>\n\n<tr>\n<th>Reason</th>\n<td>${$('clean field name').first().json['reason']}</td>\n</tr>\n\n</table>\n\n</body>\n</html>\n`;\n\nreturn [\n{\njson:{\nhtml\n}\n}\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2384,
+        -416
+      ],
+      "id": "9d97a94d-20e1-4e6e-9711-9202ec508fa0",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.pdf.co/v1/pdf/convert/from/html",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "purposework686@gmail.com_LR1jJlvTKnhCgiQc5u03JKA4i9AGEoj6x12pZOUWpXyG9ZcRwKo7r3xyZmRa1rZE"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "html",
+              "value": "={{$json.html}}"
+            },
+            {
+              "name": "name",
+              "value": "={{ $('clean field name').item.json['request id'] }}-{{ $('clean field name').item.json['employee name '] }}PurchaseOrder.pdf "
+            },
+            {
+              "name": "inline",
+              "value": "false"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        2576,
+        -416
+      ],
+      "id": "7edcec04-66bb-4832-b004-f7e134a139b6",
+      "name": "create url of purchase"
+    },
+    {
+      "parameters": {
+        "url": "={{$json.url}}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        2752,
+        -416
+      ],
+      "id": "243b5c8c-e2ee-4c9e-a499-f3150524dcae",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1dn0tkgnc-UeuU7wHyIHkwNNwpqH2NzL7aCtypj6_qEQ",
+          "mode": "list",
+          "cachedResultName": " purchase approval",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dn0tkgnc-UeuU7wHyIHkwNNwpqH2NzL7aCtypj6_qEQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dn0tkgnc-UeuU7wHyIHkwNNwpqH2NzL7aCtypj6_qEQ/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "respond id ": "={{ $('clean field name').item.json['request id'] }}",
+            "status": "Aprroved by finance"
+          },
+          "matchingColumns": [
+            "respond id "
+          ],
+          "schema": [
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "respond id ",
+              "displayName": "respond id ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "employee name",
+              "displayName": "employee name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "employee email",
+              "displayName": "employee email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "department",
+              "displayName": "department",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "item",
+              "displayName": "item",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "quantity",
+              "displayName": "quantity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "ammount",
+              "displayName": "ammount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "reason",
+              "displayName": "reason",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2192,
+        -416
+      ],
+      "id": "b61c4f07-16e5-42ed-bc2c-3689182359d8",
+      "name": "Update row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "o10OGF3i2mV3urzQ",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "={{ $json.name }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "root",
+          "cachedResultName": "/ (Root folder)"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2944,
+        -496
+      ],
+      "id": "389d015c-43ba-438d-b2b0-caa06278d5db",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "XoO4GVMNlRA9h0Ix",
+          "name": "Google Drive account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "purposework686@gmail.com",
+        "subject": "New Purchase Order",
+        "emailType": "text",
+        "message": "=Please supply: \nOrder placed by{{ $('clean field name').item.json['employee name '] }} should deliver within 3 working days  \nHere are the details of order:",
+        "options": {
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {}
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        2944,
+        -336
+      ],
+      "id": "1f24e39a-9032-4f5d-ac7d-a70400a947e0",
+      "name": "Send a message1",
+      "webhookId": "f5640293-52d4-4fac-9c3e-07fcd1bda906",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "7fKllvlXd4YeeeoO",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const html = `\n<html>\n<head>\n<style>\nbody{\nfont-family:Arial;\npadding:40px;\n}\n\ntable{\nborder-collapse:collapse;\nwidth:100%;\n}\n\ntd,th{\nborder:1px solid #000;\npadding:8px;\n}\n\nh1{\ntext-align:center;\n}\n</style>\n</head>\n\n<body>\n\n<h1>Purchase Order</h1>\n\n<table>\n\n<tr>\n<th>PO Number</th>\n<td>${$('clean field name').first().json.poNumber}</td>\n</tr>\n\n<tr>\n<th>Employee</th>\n<td>${$('clean field name').first().json['employee name ']}</td>\n</tr>\n\n<tr>\n<th>Department</th>\n<td>${$('clean field name').first().json['department']}</td>\n</tr>\n\n<tr>\n<th>Item</th>\n<td>${$('clean field name').first().json['item']}</td>\n</tr>\n\n<tr>\n<th>Quantity</th>\n<td>${$('clean field name').first().json['quantity']}</td>\n</tr>\n\n<tr>\n<th>Amount</th>\n<td>${$('clean field name').first().json['ammount']}</td>\n</tr>\n\n<tr>\n<th>Reason</th>\n<td>${$('clean field name').first().json['reason']}</td>\n</tr>\n\n</table>\n\n</body>\n</html>\n`;\n\nreturn [\n{\njson:{\nhtml\n}\n}\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1792,
+        48
+      ],
+      "id": "59e8114b-b527-470e-95bc-d5e15c15b61e",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.pdf.co/v1/pdf/convert/from/html",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "purposework686@gmail.com_LR1jJlvTKnhCgiQc5u03JKA4i9AGEoj6x12pZOUWpXyG9ZcRwKo7r3xyZmRa1rZE"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "html",
+              "value": "={{$json.html}}"
+            },
+            {
+              "name": "name",
+              "value": "={{ $('clean field name').item.json['request id'] }}-{{ $('clean field name').item.json['employee name '] }}PurchaseOrder.pdf "
+            },
+            {
+              "name": "inline",
+              "value": "false"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        1984,
+        48
+      ],
+      "id": "a5341046-6082-49d7-89c9-fb8267996ad7",
+      "name": "create url of purchase1"
+    },
+    {
+      "parameters": {
+        "url": "={{$json.url}}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        2192,
+        48
+      ],
+      "id": "cfd64f95-e564-4a9c-830f-4c1c29cad267",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "name": "={{ $json.name }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "root",
+          "cachedResultName": "/ (Root folder)"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2368,
+        -48
+      ],
+      "id": "5b0a045a-70e8-471a-a80d-d47d7a0be315",
+      "name": "Upload file1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "XoO4GVMNlRA9h0Ix",
+          "name": "Google Drive account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "purposework686@gmail.com",
+        "subject": "New Purchase Order",
+        "emailType": "text",
+        "message": "=Please supply: \nOrder placed by{{ $('clean field name').item.json['employee name '] }} should deliver within 3 working days  \nHere are the details of order:",
+        "options": {
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {}
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        2368,
+        128
+      ],
+      "id": "156b75b2-9893-41b5-9511-189a0d44b142",
+      "name": "Send a message2",
+      "webhookId": "f5640293-52d4-4fac-9c3e-07fcd1bda906",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "7fKllvlXd4YeeeoO",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "validate data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "approval status": {
+      "main": [
+        [
+          {
+            "node": "Update status",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update status1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "validate data": {
+      "main": [
+        [
+          {
+            "node": "clean field name",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "incomplete request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "clean field name": {
+      "main": [
+        [
+          {
+            "node": "data in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "data in sheet": {
+      "main": [
+        [
+          {
+            "node": "manager  response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "manager  response": {
+      "main": [
+        [
+          {
+            "node": "approval status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update status": {
+      "main": [
+        [
+          {
+            "node": "amount check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update status1": {
+      "main": [
+        [
+          {
+            "node": "rejected email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "amount check": {
+      "main": [
+        [
+          {
+            "node": "Send message and wait for response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send message and wait for response": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "create url of purchase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create url of purchase": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file": {
+      "main": [
+        []
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "create url of purchase1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create url of purchase1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Upload file1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a message2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "f56c42de-347a-4828-8e7f-d855020cdbe7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e9bc5f31543b38f3f3e621629a57de9364a6484f5dca267a394baeed0e6ebe5"
+  },
+  "nodeGroups": [],
+  "id": "aLKaedK1Uf0Maoa6",
+  "tags": []
+}
